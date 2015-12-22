@@ -29,6 +29,8 @@ Private Sub CommandButton1_Click()
     
     '   Add picture
     GraphImage = "C:\ProductMasterFile\ghs.png"
+    
+    
      
      With objWord
         '.Visible = True
@@ -53,7 +55,7 @@ Private Sub CommandButton1_Click()
                 wrdPic.ScaleWidth = 50
                 wrdPic.ScaleHeight = 50
             
-                .MoveRight
+                .moveRight
               
                 .Font.Bold = True
                 .TypeText Text:="General Healthcare Solution Pty Ltd" & Chr(11)
@@ -76,7 +78,6 @@ Private Sub CommandButton1_Click()
         
         With .Selection
            
-        
             Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
                     NumRows:=1, NumColumns:=3, _
                     DefaultTableBehavior:=wdWord9TableBehavior, _
@@ -93,9 +94,9 @@ Private Sub CommandButton1_Click()
                 .Font.Size = 12
                 .TypeText Text:=Chr(11)
                 .TypeText Text:="ATTENTION TO:" & Chr(11)
-                .MoveRight
+                .moveRight
                 
-                .MoveRight
+                .moveRight
                 objtable.Cell(1, 3).Borders.Enable = True
                 objtable.Cell(1, 3).Range.ParagraphFormat.Alignment = 0
                 .Font.Size = 12
@@ -107,8 +108,6 @@ Private Sub CommandButton1_Click()
                 .TypeText Text:="Payment" & Chr(11)
                 .TypeText Text:="Ship via" & Chr(11)
                 .TypeText Text:="Salesperson" & Chr(11)
-                
-                      
         
         End With
         .Selection.moveDown
@@ -121,17 +120,38 @@ Private Sub CommandButton1_Click()
           End With
           
          With .Selection
-           
-        
+         defaultrows = 8
             Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
-                    NumRows:=2, NumColumns:=7, _
+                    NumRows:=2 + defaultrows, NumColumns:=7, _
                     DefaultTableBehavior:=wdWord9TableBehavior, _
                     AutoFitBehavior:=wdAutoFitContent)
                     objtable.Borders.Enable = True
-                 'objtable.Rows(1).HeadingFormat = True
+                 objtable.Rows(1).HeadingFormat = True
                 'objtable.Cell(1, 1).Range.ParagraphFormat.Alignment = wdAlignParagraphRight
+           
                   .Font.Size = 12
                 .Font.Bold = True
+                 '.Borders(xlEdgeTop).Weight = xlThin
+                 'objtable.Borders.OutsideLineStyle = True
+                 objtable.Borders.InsideLineStyle = wdLineStyleSingle
+                'objTable.Rows(1).Cells.Borders.Item(ppBorderTop).Visible = msoTrue
+               'objTable.Borders.OutsideLineStyle = wdLineStyleSingle
+               'objTable.Borders.OutsideLineWidth = wdLineWidth075pt
+               ' objTable.Borders.OutsideColor = wdBlack
+               
+                objtable.Rows(10).Borders.Enable = True
+                objtable.Columns.Borders.Enable = True
+                objtable.Rows.Borders.Enable = False
+                
+                objtable.Rows(1).Borders.Enable = True
+                
+                
+               ' objtable.Condition(wdLastRow).Borders.Enable = True
+                'objtable.Borders(wdBorderBottom).InsideLineStyle = wdLineStyleSingle
+ 'objTable.Borders.OutsideLineStyle = wdLineStyleDouble
+                'objTable.Borders.InsideLineStyle = wdLineStyleNone
+                
+                
                  objtable.Cell(1, 1).Range.Text = "Item No."
                   objtable.Cell(1, 2).Range.Font.Size = 12
                 objtable.Cell(1, 2).Range.Font.Bold = True
@@ -139,6 +159,7 @@ Private Sub CommandButton1_Click()
                  objtable.Cell(1, 3).Range.Font.Size = 12
                 objtable.Cell(1, 3).Range.Font.Bold = True
                 objtable.Cell(1, 3).Range.Text = "Qty"
+        
                  objtable.Cell(1, 4).Range.Font.Size = 12
                 objtable.Cell(1, 4).Range.Font.Bold = True
                 objtable.Cell(1, 4).Range.Text = "Unit Price"
@@ -152,15 +173,87 @@ Private Sub CommandButton1_Click()
                 objtable.Cell(1, 7).Range.Font.Bold = True
                 objtable.Cell(1, 7).Range.Text = "G.S.T"
                 
-                  
+                j = 1
+                For i = 0 To ListBoxSearchSpecificColumn.ListCount - 1
+                    If ListBoxSearchSpecificColumn.Selected(i) = True Then
+                    'ListBox2.AddItem ListBox1.List(i)
+                    objtable.Cell(1 + j, 1).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 1).Range.Text = ListBoxSearchSpecificColumn.List(i, 0)
+                    objtable.Cell(1 + j, 2).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 2).Range.Text = ListBoxSearchSpecificColumn.List(i, 1)
+                    objtable.Cell(1 + j, 3).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 3).Range.Text = ListBoxSearchSpecificColumn.List(i, 2)
+                    objtable.Cell(1 + j, 4).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 4).Range.Text = ListBoxSearchSpecificColumn.List(i, 3)
+                    objtable.Cell(1 + j, 5).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 5).Range.Text = ListBoxSearchSpecificColumn.List(i, 4)
+                    objtable.Cell(1 + j, 6).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 6).Range.Text = ListBoxSearchSpecificColumn.List(i, 5)
+                    objtable.Cell(1 + j, 7).Range.Font.Size = 10
+                    objtable.Cell(1 + j, 7).Range.Text = ListBoxSearchSpecificColumn.List(i, 6)
+                    j = j + 1
+                    End If
+                Next i
                 
+                'objTable.Borders.OutsideLineStyle = wdLineStyleSingle
+                'objTable.Borders(xlEdgeBottom).LineStyle = xlContinuous
                 
-        
+                For Each wdCell In objtable.Columns(1).Cells
+                    .moveDown
+                Next wdCell
+                .moveDown
+        End With
+      
+        With .Selection
+            .ParagraphFormat.Alignment = 0
+            .Font.Size = 10
+            .Font.Bold = True
+            .TypeText Text:=Chr(11)
+            .TypeText Text:="Quotation valid 90 days"
+       
         End With
         
+        With .Selection
+            Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
+                    NumRows:=2, NumColumns:=3, _
+                    DefaultTableBehavior:=wdWord9TableBehavior, _
+                    AutoFitBehavior:=wdAutoFitContent)
+                    objtable.Borders.Enable = True
+                 'objtable.Rows(1).HeadingFormat = True
+                'objtable.Cell(1, 1).Range.ParagraphFormat.Alignment = wdAlignParagraphRight
+                     objtable.Columns(1).PreferredWidth = 300
+                objtable.Columns(2).PreferredWidth = 100
+                objtable.Columns(3).PreferredWidth = 100
+                objtable.Columns(1).Borders.Enable = False
+                objtable.Columns(2).Borders.Enable = True
+                objtable.Columns(3).Borders.Enable = True
+                .moveRight
+                
+                  .Font.Size = 12
+                .Font.Bold = True
+                .TypeText Text:="Subtotal" & Chr(11)
+                .Font.Bold = False
+                .TypeText Text:="Freight Charge" & Chr(11)
+                .Font.Bold = True
+                .TypeText Text:="GST"
+               
+                
+                .moveDown
+                  .Font.Size = 12
+                .Font.Bold = True
+                .TypeText Text:="TOTAL INVOICE"
+                 
+                .moveDown
+        End With
         
-     
-        
+         With .Selection
+            .ParagraphFormat.Alignment = 0
+            .Font.Size = 10
+            .Font.Bold = False
+            .TypeText Text:=Chr(11)
+            .TypeText Text:="Customer ABN:"
+       
+        End With
         
         .ActiveDocument.SaveAs Filename:=SaveAsName
     End With
@@ -178,6 +271,8 @@ Private Sub CommandButton1_Click()
     
 
 End Sub
+
+
 
 Private Sub SaveAsPDF_Click()
 '   Creates memos in word using Automation
@@ -221,15 +316,6 @@ Private Sub SaveAsPDF_Click()
 
     intNoOfColumns = 2
 
-    'Set objDoc = WordApp.Documents.Add
-
-    'Set objRange = objDoc.Range
-
-    'objDoc.Tables.Add objRange, intNoOfRows, intNoOfColumns
-
-    'Set objTable = objDoc.Tables(1)
-
-   ' objTable.Borders.Enable = True
 
     'For i = 1 To 1
 
@@ -326,15 +412,30 @@ productValid:
     
     j = 0
     aCell = searchInput.Text
+    
+    ListBoxSearchSpecificColumn.AddItem
+    ListBoxSearchSpecificColumn.FontBold = True
+   ListBoxSearchSpecificColumn.List(0, 0) = "Item No."
+   ListBoxSearchSpecificColumn.List(0, 1) = "Production Description"
+   ListBoxSearchSpecificColumn.List(0, 2) = "Qty"
+   ListBoxSearchSpecificColumn.List(0, 3) = "Unit Price"
+   ListBoxSearchSpecificColumn.List(0, 4) = "Unit"
+   ListBoxSearchSpecificColumn.List(0, 5) = "Amount"
+   ListBoxSearchSpecificColumn.List(0, 6) = "G.S.T"
    
+   ListBoxSearchSpecificColumn.FontBold = False
+   j = 1
     For i = 3 To 128
         If InStr(Sheets("ACTIVE 2011").Range("C" & i).Value, aCell) > 0 Then
             'ListBoxSearchSpecificColumn.RowSource = "'ACTIVE 2011'!" & Sheets("ACTIVE 2011").Range("A" & i & ":" & "B" & i & ";"& "A" & i & ":" & "B").Address
             ListBoxSearchSpecificColumn.AddItem
-            ListBoxSearchSpecificColumn.List(j, 0) = Sheets("ACTIVE 2011").Range("A" & i)
-            ListBoxSearchSpecificColumn.List(j, 1) = Sheets("ACTIVE 2011").Range("B" & i)
-            ListBoxSearchSpecificColumn.List(j, 2) = Sheets("ACTIVE 2011").Range("C" & i)
-            ListBoxSearchSpecificColumn.List(j, 3) = Sheets("ACTIVE 2011").Range("D" & i)
+            ListBoxSearchSpecificColumn.List(j, 0) = Sheets("ACTIVE 2011").Range("B" & i)
+            ListBoxSearchSpecificColumn.List(j, 1) = Sheets("ACTIVE 2011").Range("C" & i)
+            ListBoxSearchSpecificColumn.List(j, 2) = ""
+            ListBoxSearchSpecificColumn.List(j, 3) = Sheets("ACTIVE 2011").Range("Q" & i)
+            ListBoxSearchSpecificColumn.List(j, 4) = Sheets("ACTIVE 2011").Range("E" & i)
+            ListBoxSearchSpecificColumn.List(j, 5) = ""
+            ListBoxSearchSpecificColumn.List(j, 6) = Sheets("ACTIVE 2011").Range("S" & i)
             
             j = j + 1
         'Else
@@ -348,4 +449,3 @@ productValid:
     End If
     
 End Sub
-
