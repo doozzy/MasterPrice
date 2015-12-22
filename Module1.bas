@@ -5,16 +5,19 @@ Sub exchangeRate()
 '
 
 '
-    Dim exchangeRate As Double
+    Dim exchangeRate As String
     
     exchangeRate = InputBox("Please enter the current exchange rate.")
+   
+    If Not IsNumeric(exchangeRate) Then
+     MsgBox "You should enter a number"
+     Exit Sub
+     End If
     
     
-    'If IsNull(exchangeRate) = 0 Then Exit Sub
+    ThisWorkbook.Sheets("ACTIVE 2011").Range("O3:O182").FormulaR1C1 = "=RC[-2]*" & CDbl(exchangeRate) & ""
     
-    ThisWorkbook.Sheets("ACTIVE 2011").Range("O3:O182").FormulaR1C1 = "=RC[-2]*" & exchangeRate & ""
-    
-    ThisWorkbook.Sheets("ACTIVE 2011").Range("L3:L182").FormulaR1C1 = "=IFERROR(RC[-1]*" & exchangeRate & ", ""Not available"")"
+    ThisWorkbook.Sheets("ACTIVE 2011").Range("L3:L182").FormulaR1C1 = "=IFERROR(RC[-1]*" & CDbl(exchangeRate) & ", ""Not available"")"
     
 End Sub
 
