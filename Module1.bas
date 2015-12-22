@@ -10,7 +10,7 @@ Sub exchangeRate()
     exchangeRate = InputBox("Please enter the current exchange rate.")
    
     If Not IsNumeric(exchangeRate) Then
-     MsgBox "You should enter a number"
+     MsgBox "You should enter a number!"
      Exit Sub
      End If
     
