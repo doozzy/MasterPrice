@@ -53,7 +53,7 @@ Private Sub CommandButton1_Click()
                 wrdPic.ScaleWidth = 50
                 wrdPic.ScaleHeight = 50
             
-                .moveRight
+                .MoveRight
               
                 .Font.Bold = True
                 .TypeText Text:="General Healthcare Solution Pty Ltd" & Chr(11)
@@ -76,6 +76,7 @@ Private Sub CommandButton1_Click()
         
         With .Selection
            
+        
             Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
                     NumRows:=1, NumColumns:=3, _
                     DefaultTableBehavior:=wdWord9TableBehavior, _
@@ -92,9 +93,9 @@ Private Sub CommandButton1_Click()
                 .Font.Size = 12
                 .TypeText Text:=Chr(11)
                 .TypeText Text:="ATTENTION TO:" & Chr(11)
-                .moveRight
+                .MoveRight
                 
-                .moveRight
+                .MoveRight
                 objtable.Cell(1, 3).Borders.Enable = True
                 objtable.Cell(1, 3).Range.ParagraphFormat.Alignment = 0
                 .Font.Size = 12
@@ -106,6 +107,8 @@ Private Sub CommandButton1_Click()
                 .TypeText Text:="Payment" & Chr(11)
                 .TypeText Text:="Ship via" & Chr(11)
                 .TypeText Text:="Salesperson" & Chr(11)
+                
+                      
         
         End With
         .Selection.moveDown
@@ -118,6 +121,8 @@ Private Sub CommandButton1_Click()
           End With
           
          With .Selection
+           
+        
             Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
                     NumRows:=2, NumColumns:=7, _
                     DefaultTableBehavior:=wdWord9TableBehavior, _
@@ -125,7 +130,6 @@ Private Sub CommandButton1_Click()
                     objtable.Borders.Enable = True
                  'objtable.Rows(1).HeadingFormat = True
                 'objtable.Cell(1, 1).Range.ParagraphFormat.Alignment = wdAlignParagraphRight
-           
                   .Font.Size = 12
                 .Font.Bold = True
                  objtable.Cell(1, 1).Range.Text = "Item No."
@@ -148,62 +152,15 @@ Private Sub CommandButton1_Click()
                 objtable.Cell(1, 7).Range.Font.Bold = True
                 objtable.Cell(1, 7).Range.Text = "G.S.T"
                 
-                For Each wdCell In objtable.Columns(1).Cells
-                    .moveDown
-                Next wdCell
-                .moveDown
-        End With
-      
-        With .Selection
-            .ParagraphFormat.Alignment = 0
-            .Font.Size = 10
-            .Font.Bold = True
-            .TypeText Text:=Chr(11)
-            .TypeText Text:="Quotation valid 90 days"
-       
+                  
+                
+                
+        
         End With
         
-        With .Selection
-            Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
-                    NumRows:=2, NumColumns:=3, _
-                    DefaultTableBehavior:=wdWord9TableBehavior, _
-                    AutoFitBehavior:=wdAutoFitContent)
-                    objtable.Borders.Enable = True
-                 'objtable.Rows(1).HeadingFormat = True
-                'objtable.Cell(1, 1).Range.ParagraphFormat.Alignment = wdAlignParagraphRight
-                     objtable.Columns(1).PreferredWidth = 300
-                objtable.Columns(2).PreferredWidth = 100
-                objtable.Columns(3).PreferredWidth = 100
-                objtable.Columns(1).Borders.Enable = False
-                objtable.Columns(2).Borders.Enable = True
-                objtable.Columns(3).Borders.Enable = True
-                .moveRight
-                
-                  .Font.Size = 12
-                .Font.Bold = True
-                .TypeText Text:="Subtotal" & Chr(11)
-                .Font.Bold = False
-                .TypeText Text:="Freight Charge" & Chr(11)
-                .Font.Bold = True
-                .TypeText Text:="GST"
-               
-                
-                .moveDown
-                  .Font.Size = 12
-                .Font.Bold = True
-                .TypeText Text:="TOTAL INVOICE"
-                 
-                .moveDown
-        End With
         
-         With .Selection
-            .ParagraphFormat.Alignment = 0
-            .Font.Size = 10
-            .Font.Bold = False
-            .TypeText Text:=Chr(11)
-            .TypeText Text:="Customer ABN"
-       
-        End With
+     
+        
         
         .ActiveDocument.SaveAs Filename:=SaveAsName
     End With
@@ -391,3 +348,4 @@ productValid:
     End If
     
 End Sub
+
