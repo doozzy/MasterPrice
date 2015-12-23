@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserFormsearchProDec 
    Caption         =   "Search based on product description"
-   ClientHeight    =   4965
+   ClientHeight    =   7305
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   9915
@@ -15,6 +15,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub CommandButton1_Click()
     Dim objWord As Object
+    Dim subtotal As Double
+    subtotal = 0
   
 '   Start Word and create an object (late binding)
     Set objWord = CreateObject("Word.Application")
@@ -103,11 +105,24 @@ Private Sub CommandButton1_Click()
                 .Font.Bold = True
                 .TypeText Text:=Chr(11)
                 .TypeText Text:="Quotation No." & Chr(11)
-                .TypeText Text:="Date:" & Chr(11)
-                .TypeText Text:="Terms" & Chr(11)
-                .TypeText Text:="Payment" & Chr(11)
-                .TypeText Text:="Ship via" & Chr(11)
-                .TypeText Text:="Salesperson" & Chr(11)
+                .TypeText Text:="Date:" & Chr(9) & Chr(9)
+                .Font.Bold = False
+                .TypeText Text:=Chr(9) & Date & Chr(11)
+                .Font.Bold = True
+                .TypeText Text:="Payment Terms: " & Chr(11)
+                .TypeText Text:="Ship via:" & Chr(9) & Chr(9)
+                 If OptionFreight Then
+                 .Font.Size = 12
+                 .Font.Bold = False
+                 .TypeText Text:="Freight" & Chr(11)
+                 End If
+                If Optionair Then
+                .Font.Size = 12
+                .Font.Bold = False
+                .TypeText Text:="Air" & Chr(11)
+                End If
+                .Font.Bold = True
+                .TypeText Text:="Salesperson:" & Chr(11)
         
         End With
         .Selection.moveDown
@@ -122,7 +137,7 @@ Private Sub CommandButton1_Click()
          With .Selection
          defaultrows = 8
             Set objtable = .Tables.Add(Range:=objWord.Selection.Range, _
-                    NumRows:=2 + defaultrows, NumColumns:=7, _
+                    NumRows:=2 + defaultrows, NumColumns:=6, _
                     DefaultTableBehavior:=wdWord9TableBehavior, _
                     AutoFitBehavior:=wdAutoFitContent)
                     objtable.Borders.Enable = True
@@ -150,6 +165,13 @@ Private Sub CommandButton1_Click()
                 'objtable.Borders(wdBorderBottom).InsideLineStyle = wdLineStyleSingle
  'objTable.Borders.OutsideLineStyle = wdLineStyleDouble
                 'objTable.Borders.InsideLineStyle = wdLineStyleNone
+                objtable.Columns(1).PreferredWidth = 50
+                objtable.Columns(2).PreferredWidth = 250
+               
+                objtable.Columns(3).PreferredWidth = 40
+                objtable.Columns(4).PreferredWidth = 70
+                objtable.Columns(5).PreferredWidth = 50
+                objtable.Columns(6).PreferredWidth = 90
                 
                 
                  objtable.Cell(1, 1).Range.Text = "Item No."
@@ -158,20 +180,18 @@ Private Sub CommandButton1_Click()
                 objtable.Cell(1, 2).Range.Text = "Product Description"
                  objtable.Cell(1, 3).Range.Font.Size = 12
                 objtable.Cell(1, 3).Range.Font.Bold = True
-                objtable.Cell(1, 3).Range.Text = "Qty"
+                objtable.Cell(1, 3).Range.Text = "Box Qty"
         
                  objtable.Cell(1, 4).Range.Font.Size = 12
                 objtable.Cell(1, 4).Range.Font.Bold = True
                 objtable.Cell(1, 4).Range.Text = "Unit Price"
                  objtable.Cell(1, 5).Range.Font.Size = 12
                 objtable.Cell(1, 5).Range.Font.Bold = True
-                objtable.Cell(1, 5).Range.Text = "Unit"
+                objtable.Cell(1, 5).Range.Text = "UOM Unit"
                  objtable.Cell(1, 6).Range.Font.Size = 12
                 objtable.Cell(1, 6).Range.Font.Bold = True
-                objtable.Cell(1, 6).Range.Text = "Amount"
-                objtable.Cell(1, 7).Range.Font.Size = 12
-                objtable.Cell(1, 7).Range.Font.Bold = True
-                objtable.Cell(1, 7).Range.Text = "G.S.T"
+                objtable.Cell(1, 6).Range.Text = "Box Price"
+               
                 
                 j = 1
                 For i = 0 To ListBoxSearchSpecificColumn.ListCount - 1
@@ -189,8 +209,12 @@ Private Sub CommandButton1_Click()
                     objtable.Cell(1 + j, 5).Range.Text = ListBoxSearchSpecificColumn.List(i, 4)
                     objtable.Cell(1 + j, 6).Range.Font.Size = 10
                     objtable.Cell(1 + j, 6).Range.Text = ListBoxSearchSpecificColumn.List(i, 5)
-                    objtable.Cell(1 + j, 7).Range.Font.Size = 10
-                    objtable.Cell(1 + j, 7).Range.Text = ListBoxSearchSpecificColumn.List(i, 6)
+                    If Not IsNumeric(ListBoxSearchSpecificColumn.List(i, 5)) Then
+                    ListBoxSearchSpecificColumn.List(i, 5) = 0
+                    End If
+                    
+                    subtotal = subtotal + ListBoxSearchSpecificColumn.List(i, 5)
+                  
                     j = j + 1
                     End If
                 Next i
@@ -233,25 +257,29 @@ Private Sub CommandButton1_Click()
                 .Font.Bold = True
                 .TypeText Text:="Subtotal" & Chr(11)
                 .Font.Bold = False
-                .TypeText Text:="Freight Charge" & Chr(11)
-                .Font.Bold = True
-                .TypeText Text:="GST"
+                .TypeText Text:="Freight Charge"
+                .moveRight
+                .TypeText Text:="$" & subtotal & Chr(11)
+                .TypeText Text:="$ 0 "
                
                 
                 .moveDown
+                .moveLeft
                   .Font.Size = 12
                 .Font.Bold = True
                 .TypeText Text:="TOTAL INVOICE"
+                .moveRight
+                .TypeText Text:="$" & subtotal & " FReCha"
                  
                 .moveDown
         End With
-        
+        .Selection.moveDown
          With .Selection
-            .ParagraphFormat.Alignment = 0
+            .ParagraphFormat.Alignment = 2
             .Font.Size = 10
             .Font.Bold = False
             .TypeText Text:=Chr(11)
-            .TypeText Text:="Customer ABN:"
+            .TypeText Text:="Exclude G.S.T"
        
         End With
         
@@ -389,6 +417,7 @@ Private Sub SaveAsPDF_Click()
       Application.DefaultFilePath
 End Sub
 
+
 Private Sub searchbutton_Click()
 '
 'Search a product description
@@ -417,25 +446,28 @@ productValid:
     ListBoxSearchSpecificColumn.FontBold = True
    ListBoxSearchSpecificColumn.List(0, 0) = "Item No."
    ListBoxSearchSpecificColumn.List(0, 1) = "Production Description"
-   ListBoxSearchSpecificColumn.List(0, 2) = "Qty"
+   ListBoxSearchSpecificColumn.List(0, 2) = "Box Qty"
    ListBoxSearchSpecificColumn.List(0, 3) = "Unit Price"
-   ListBoxSearchSpecificColumn.List(0, 4) = "Unit"
-   ListBoxSearchSpecificColumn.List(0, 5) = "Amount"
-   ListBoxSearchSpecificColumn.List(0, 6) = "G.S.T"
+   ListBoxSearchSpecificColumn.List(0, 4) = "UOM Unit"
+   ListBoxSearchSpecificColumn.List(0, 5) = "Box Price"
+   
    
    ListBoxSearchSpecificColumn.FontBold = False
    j = 1
     For i = 3 To 128
-        If InStr(Sheets("ACTIVE 2011").Range("C" & i).Value, aCell) > 0 Then
+        If InStr(Sheets("ACTIVE 2011").Range("B" & i).Value, aCell) > 0 Then
             'ListBoxSearchSpecificColumn.RowSource = "'ACTIVE 2011'!" & Sheets("ACTIVE 2011").Range("A" & i & ":" & "B" & i & ";"& "A" & i & ":" & "B").Address
             ListBoxSearchSpecificColumn.AddItem
             ListBoxSearchSpecificColumn.List(j, 0) = Sheets("ACTIVE 2011").Range("B" & i)
             ListBoxSearchSpecificColumn.List(j, 1) = Sheets("ACTIVE 2011").Range("C" & i)
-            ListBoxSearchSpecificColumn.List(j, 2) = ""
+            ListBoxSearchSpecificColumn.List(j, 2) = Sheets("ACTIVE 2011").Range("D" & i)
             ListBoxSearchSpecificColumn.List(j, 3) = Sheets("ACTIVE 2011").Range("Q" & i)
             ListBoxSearchSpecificColumn.List(j, 4) = Sheets("ACTIVE 2011").Range("E" & i)
-            ListBoxSearchSpecificColumn.List(j, 5) = ""
-            ListBoxSearchSpecificColumn.List(j, 6) = Sheets("ACTIVE 2011").Range("S" & i)
+            If IsNumeric(ListBoxSearchSpecificColumn.List(j, 2)) And IsNumeric(ListBoxSearchSpecificColumn.List(j, 3)) Then
+            ListBoxSearchSpecificColumn.List(j, 5) = ListBoxSearchSpecificColumn.List(j, 2) * ListBoxSearchSpecificColumn.List(j, 3)
+            Else
+             ListBoxSearchSpecificColumn.List(j, 5) = "Box Qty or Unit Price is not available."
+           End If
             
             j = j + 1
         'Else
